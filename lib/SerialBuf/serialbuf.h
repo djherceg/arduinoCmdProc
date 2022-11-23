@@ -1,6 +1,6 @@
 /*
     Serial buffer
-    Djordje Herceg, 27.4.2021.
+    Djordje Herceg, 11.11.2022.
 
     GitHub: https://github.com/djherceg/serialBuf
 */
@@ -20,32 +20,32 @@ private:
     static const int maxbuf = 80;
     bool overflow;
     uint32_t mils;
-    uint32_t stopInterval = 50;         // interval nakon zadnjeg primljenog karaktera kada se poruka računa kao završena
+    uint32_t stopInterval = 50;         // interval after the last received characer in BINARYMODE when the reception is considered complete
     bool finished;
-    int length;                         // dužina sadržaja u baferu
-    int position;                       // trenutna pozicija u baferu
+    int length;                         // length of contents in buffer 
+    int position;                       // current position in buffer
     int mode = SERIALBUF_TEXTMODE;      // BINARYMODE or TEXTMODE (recognize CR+LF or LF as End-of-line)
 
 public:
-    /** Inicijalizuje bafer sa stop intervalom od 50ms */
+    /** Initializes the buffer with the 50ms stop interval */
     void init();
 
-    /** Inicijalizuje bafer sa zadatim stop intervalom */
+    /** Initializes the buffer with the specified stop interval */
     void init(uint32_t stopinterval);
 
-    /** Briše bafer */
+    /** Clears the buffer */
     void clear();
 
-    /** Prebacuje bafer u TEXT mod. Čeka da se red završi znakom LF, ignoriše CR */
+    /** Buffer in TEXTMODE. Expects LF to finish reception, ignores CR. */
     void textMode();
 
-    /** Prebacuje bafer u BINARY mod. Čeka stopInterval milisekundi a onda proglašava kraj unosa */
+    /** Buffer in BINARYMODE. Waits stopInterval milliseconds before reception is considered complete */
     void binaryMode();
 
-    /** Vraća mod bafera: SERIALBUF_TEXTMODE ili SERIALBUF_BINARYMODE */
+    /** Buffer mode: SERIALBUF_TEXTMODE or SERIALBUF_BINARYMODE */
     int getMode();
 
-    /** Poziva se stalno radi prihvata karaktera sa serijskog porta */
+    /** Must be frequently invoked in loop() */
     void loop();
 
     /** Vraća karakter na poziciji+offset ili -1 ako ne postoji */

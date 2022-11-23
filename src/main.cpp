@@ -11,19 +11,7 @@ SerialBuf sbuf;
 uint8_t buf[50];
 
 
-#ifdef ENV_ESP32DEV
-const char sw1name[]{"Switch1"};
-const char count1name[]{"Counter1"};
-const char rname[]{"Temp1"};
-const char lngname[]{"LongCounter"};
-const char text1name[]{"Text1"};
-#else
-const char sw1name[] PROGMEM{"Switch1"};
-const char count1name[] PROGMEM{"Counter1"};
-const char rname[] PROGMEM{"Temp1"};
-const char lngname[] PROGMEM{"LongCounter"};
-const char text1name[] PROGMEM{"Text1"};
-#endif
+
 
 CmdProc::Proc cmdProc; // komandni procesor
 const char infoCmd[] PROGMEM{"info"};
