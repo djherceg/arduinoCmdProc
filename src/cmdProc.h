@@ -19,14 +19,14 @@ namespace CmdProc
 
   class Proc;
 
-  typedef int (*cmdCallback)(Proc *); // tip za callback funkciju
+  typedef int (*cmdCallback)(Proc &); // tip za callback funkciju
 
   class Cmd
   {
   public:
     const char *cmdName;
     cmdCallback callback;
-    Cmd(){};
+    Cmd() {};
 
     void Set(const char *cmdName, cmdCallback cbk, int minTokens, int maxTokens)
     {
@@ -78,9 +78,9 @@ namespace CmdProc
       char *pch = GetNextToken();
       if (pch != nullptr)
       {
-        //Serial.print(F("pch: >"));
-        //Serial.print(pch);
-        //Serial.println("<");
+        // Serial.print(F("pch: >"));
+        // Serial.print(pch);
+        // Serial.println("<");
         for (int j = 0; j < count; j++)
         {
 #ifdef ENV_ESP32DEV
@@ -97,7 +97,7 @@ namespace CmdProc
               rez = CheckTokenCount(mi, ma);
             }
             if (rez == 0)
-              return commands[j].callback(this);
+              return commands[j].callback(*this);   // dereference this pointer to Proc object
             else
               return rez;
           }
@@ -141,8 +141,8 @@ namespace CmdProc
       }
       curr = nullptr;
       pos = 0;
-      //Serial.print(F("Tokens found: "));
-      //Serial.println(tokenCount);
+      // Serial.print(F("Tokens found: "));
+      // Serial.println(tokenCount);
       return Exec();
     }
 
@@ -157,16 +157,16 @@ namespace CmdProc
       {
         pos++;
       }
-      //Serial.print(F("curr:"));
+      // Serial.print(F("curr:"));
       if (input[pos] != 0)
       {
         curr = &input[pos];
-        //Serial.println(curr);
+        // Serial.println(curr);
         return curr;
       }
       else
       {
-        //Serial.println(F("<nullptr>"));
+        // Serial.println(F("<nullptr>"));
         return nullptr;
       }
     }

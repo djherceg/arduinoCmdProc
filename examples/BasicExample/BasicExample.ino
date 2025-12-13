@@ -1,10 +1,11 @@
 #include <Arduino.h>
+#include <cmdProc.h>
 #include "serialbuf.h"
 
 #ifndef ENV_ESP32DEV
 #include "avr/pgmspace.h"
 #endif
-#include "cmdProc.h"
+
 
 SerialBuf sbuf;
 
