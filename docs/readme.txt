@@ -1,7 +1,13 @@
-Ovde ce biti uputstva
+DjH_CmdProc library
 
 Verzije
 =======
+14.12.2025 v0.2.0
+Junction points:
+- Za PlatformIO: folder ./lib/DjH_CmdProc je junction na folder ./src
+- Za Arduino: folder  C:\Users\djordje\Documents\Arduino\libraries\DjH_CmdProc je junction na
+                      C:\users\djordje\documents\github\arduinoCmdProc\src
+
 11.11.2022 v1.5.0
 - The arduinoCmdProc project is now separate from the rest of the arduinoConfig project.
 

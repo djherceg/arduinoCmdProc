@@ -2,17 +2,12 @@
 #include <cmdProc.h>
 #include "serialbuf.h"
 
-#ifndef ENV_ESP32DEV
+#if defined(__AVR__)
 #include "avr/pgmspace.h"
 #endif
 
-
 SerialBuf sbuf;
-
-uint8_t buf[50];
-
-
-
+uint8_t buf[100];
 
 CmdProc::Proc cmdProc; // komandni procesor
 const char infoCmd[] PROGMEM{"info"};
@@ -67,16 +62,6 @@ void loop()
   sbuf.clear();
 }
 
-void printStr_P(const char *p)
-{
-  char *ptr = (char *)malloc(strlen_P(p) + 1);
-  if (ptr != NULL)
-  { // if memory allocation is successful
-    strcpy_P(ptr, p);
-    Serial.print(ptr); // function overload
-    free(ptr);
-  }
-}
 
 int cmdVer(CmdProc::Proc &c)
 {
@@ -85,30 +70,19 @@ int cmdVer(CmdProc::Proc &c)
 
 int cmdInfo(CmdProc::Proc &c)
 {
-  char *s;
-  if ((s = c.GetNextToken()) == nullptr)
+  int pin;
+  if (c.TryParseInt(pin))
   {
-    Serial.print(F("cmdInfo"));
+    Serial.println(pin);
     return 0;
-  }
-  else
-  {
-    int pin;
-    if (CmdProc::tryParseInt(s, pin))
-    {
-      Serial.println(pin);
-      return 0;
-    }
   }
   return CMD_ERR_GENERALERROR;
 }
 
 int cmdQuery(CmdProc::Proc &c)
 {
-  char *s;
-  s = c.GetNextToken();
   int pin;
-  if (CmdProc::tryParseInt(s, pin))
+  if (c.TryParseInt(pin))
   {
     return 0;
   }
@@ -117,25 +91,16 @@ int cmdQuery(CmdProc::Proc &c)
 
 int cmdSet(CmdProc::Proc &c)
 {
-  int i;
-  char *s;
-  s = c.GetNextToken();
-  int pin;
-  if (CmdProc::tryParseInt(s, pin))
+  int pin, i;
+  if (c.TryParseInt(pin) && c.TryParseInt(i))
   {
-    s = c.GetNextToken();
-    if (CmdProc::tryParseInt(s, i))
-    {
-      return 0;
-    }
-    return CMD_ERR_INVALIDVALUE;
+    return 0;
   }
-  return CMD_ERR_GENERALERROR;
+  return CMD_ERR_INVALIDVALUE;
 }
 
 int cmdStartbin(CmdProc::Proc &c)
 {
-  //sbuf.binaryMode();
   return 0;
 }
 
