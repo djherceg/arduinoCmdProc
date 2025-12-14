@@ -104,9 +104,19 @@ namespace CmdProc
       return CMD_ERR_UNKNOWNCOMMAND;
     }
 
-    // razdvaja string tako što razmake zamenjuje bajtovima '0'
-    // ignoriše uzastopne razmake
-    // ako naiđe na navodnik (") onda ignoriše sve razmake do narednog navodnika (")
+    /// @brief Parses the input string and executes the corresponding command. Maximum input length is 127 characters.
+    /// @param s 
+    /// @return 
+    int Parse(String s)
+    {
+      char buf[128];   // TODO: make the capacity configurable
+      s.toCharArray(buf, sizeof(buf));   // Convert String to char array. This is necessary because Parse modifies the input string.
+      return Parse(buf);
+    }
+
+    // Parses the string by replacing spaces with null characters (0),
+    // ignores multiple spaces,
+    // if it encounters a quote (") it ignores all spaces until the next quote (")
     int Parse(char *s)
     {
       tokenCount = 0;
