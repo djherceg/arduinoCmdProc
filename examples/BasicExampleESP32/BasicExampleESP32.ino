@@ -10,6 +10,7 @@ int cmdQuery(CmdProc::Proc &c);
 int cmdSet(CmdProc::Proc &c);
 int cmdHelp(CmdProc::Proc &c);
 int cmdReset(CmdProc::Proc &c);
+int cmdRepeatText(CmdProc::Proc &c);
 
 void setup()
 {
@@ -17,13 +18,15 @@ void setup()
   Serial.begin(115200);
 
   // initialize the command processor
-  cmdProc.Init(6);
+  cmdProc.Init(7);
   cmdProc.Add("ver", cmdVer, 1, 1);
   cmdProc.Add("info", cmdInfo, 1, 2);
   cmdProc.Add("query", cmdQuery, 2, 2);
   cmdProc.Add("set", cmdSet, 3, 3);
   cmdProc.Add("help", cmdHelp, 1, 1);
   cmdProc.Add("reset", cmdReset, 1, 1);
+  cmdProc.Add("repeatText", cmdRepeatText, 2, 3);
+  Serial.println(F("BasicExampleESP32 Command Processor ready. Type 'help' for commands."));
 }
 
 void loop()
@@ -92,6 +95,7 @@ int cmdHelp(CmdProc::Proc &c)
   Serial.println("  info <pin> [detail]");
   Serial.println("  query <pin>");
   Serial.println("  set <pin> <value>");
+  Serial.println("  repeatText <text> [count]");
   Serial.println("  help");
   return 0;
 }
@@ -99,4 +103,20 @@ int cmdHelp(CmdProc::Proc &c)
 int cmdReset(CmdProc::Proc &c)
 {
   return 0;
+}
+
+int cmdRepeatText(CmdProc::Proc &c)
+{
+  String text;
+  int count = 1;
+  if (c.TryParseString(text))
+  {
+    c.TryParseInt(count); // optional parameter
+    for (int i = 0; i < count; i++)
+    {
+      Serial.println(text);
+    }
+    return 0;
+  }
+  return CMDPROC_ERR_INVALIDVALUE;
 }
