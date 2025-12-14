@@ -9,12 +9,12 @@
 
 #include <string.h>
 
-#define CMD_ERR_GENERALERROR -1
-#define CMD_ERR_MISSINGARGUMENT -2
-#define CMD_ERR_EXTRAARGUMENT -3
-#define CMD_ERR_INVALIDVALUE -4
-#define CMD_ERR_VALUEOUTOFRANGE -5
-#define CMD_ERR_UNKNOWNCOMMAND -128
+#define CMDPROC_ERR_GENERALERROR -1
+#define CMDPROC_ERR_MISSINGARGUMENT -2
+#define CMDPROC_ERR_EXTRAARGUMENT -3
+#define CMDPROC_ERR_INVALIDVALUE -4
+#define CMDPROC_ERR_VALUEOUTOFRANGE -5
+#define CMDPROC_ERR_UNKNOWNCOMMAND -128
 
 namespace CmdProc
 {
@@ -62,16 +62,16 @@ namespace CmdProc
       current = 0;
     }
 
-    void Add(const char *command, cmdCallback cbk)
+    void Add(const char *commandText, cmdCallback cbk)
     {
-      Add(command, cbk, 0, 0);
+      Add(commandText, cbk, 0, 0);
     }
 
-    void Add(const char *command, cmdCallback cbk, int minTok, int maxTok)
+    void Add(const char *commandText, cmdCallback cbk, int minTok, int maxTok)
     {
       if (current < count)
       {
-        commands[current++].Set(command, cbk, minTok, maxTok);
+        commands[current++].Set(commandText, cbk, minTok, maxTok);
       }
     }
 
@@ -101,7 +101,7 @@ namespace CmdProc
           }
         }
       }
-      return CMD_ERR_UNKNOWNCOMMAND;
+      return CMDPROC_ERR_UNKNOWNCOMMAND;
     }
 
     /// @brief Parses the input string and executes the corresponding command. Maximum input length is 127 characters.
@@ -187,9 +187,9 @@ namespace CmdProc
     int CheckTokenCount(int min, int max)
     {
       if (tokenCount < min)
-        return CMD_ERR_MISSINGARGUMENT;
+        return CMDPROC_ERR_MISSINGARGUMENT;
       if (tokenCount > max)
-        return CMD_ERR_EXTRAARGUMENT;
+        return CMDPROC_ERR_EXTRAARGUMENT;
       return 0;
     }
 
@@ -210,6 +210,11 @@ namespace CmdProc
     bool TryParseTime(int &outHour, int &outMinute, int &outSecond);
 
     bool TryParseDate(int &outDay, int &outMonth, int &outYear);
+
+    bool TryParseCharArray(char *outBuffer, int bufferSize);
+
+    bool TryParseString(String &outString);
+    
 
   private:
     int count;

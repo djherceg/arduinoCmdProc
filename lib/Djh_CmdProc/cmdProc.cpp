@@ -2,60 +2,86 @@
 
 namespace CmdProc
 {
-  Proc CommandProcessor;   // Singleton global command processor instance definition
+  Proc CommandProcessor; // Singleton global command processor instance definition
 
   // ==== TryParse... methods that get the next token internally ====
 
-    bool Proc::TryParseFloat(float &outResult)
+  bool Proc::TryParseFloat(float &outResult)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseFloat(s, outResult) : false;
+  }
+
+  bool Proc::TryParseInt32(int32_t &outResult, bool allowMinus)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseInt32(s, outResult, allowMinus) : false;
+  }
+
+  bool Proc::TryParseInt(int &outResult, bool allowMinus)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseInt(s, outResult, allowMinus) : false;
+  }
+
+  bool Proc::TryParseDec32(int32_t &outResult, bool allowMinus)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseDec32(s, outResult, allowMinus) : false;
+  }
+
+  bool Proc::TryParseDec(int &outResult, bool allowMinus)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseDec(s, outResult, allowMinus) : false;
+  }
+
+  bool Proc::TryParseHex32(int32_t &outResult)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseHex32(s, outResult) : false;
+  }
+
+  bool Proc::TryParseTime(int &outHour, int &outMinute, int &outSecond)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseTime(s, outHour, outMinute, outSecond) : false;
+  }
+
+  bool Proc::TryParseDate(int &outDay, int &outMonth, int &outYear)
+  {
+    char *s = GetNextToken();
+    return (s != nullptr) ? tryParseDate(s, outDay, outMonth, outYear) : false;
+  }
+
+  bool Proc::TryParseCharArray(char *outBuffer, int bufferSize)
+  {
+    char *s = GetNextToken();
+    if (s != nullptr)
     {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseFloat(s, outResult) : false;
+      strncpy(outBuffer, s, bufferSize);
+      outBuffer[bufferSize - 1] = 0; // ensure null termination
+      return true;
     }
-
-    bool Proc::TryParseInt32(int32_t &outResult, bool allowMinus)
+    else
     {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseInt32(s, outResult, allowMinus) : false;
+      return false;
     }
+  }
 
-    bool Proc::TryParseInt(int &outResult, bool allowMinus)
+  bool Proc::TryParseString(String &outString)
+  {
+    char *s = GetNextToken();
+    if (s != nullptr)
     {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseInt(s, outResult, allowMinus) : false;
+      outString = String(s);
+      return true;
     }
-
-    bool Proc::TryParseDec32(int32_t &outResult, bool allowMinus)
+    else
     {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseDec32(s, outResult, allowMinus) : false;
+      return false;
     }
-
-    bool Proc::TryParseDec(int &outResult, bool allowMinus)
-    {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseDec(s, outResult, allowMinus) : false;
-    }
-
-    bool Proc::TryParseHex32(int32_t &outResult)
-    {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseHex32(s, outResult) : false;
-    }
-
-    bool Proc::TryParseTime(int &outHour, int &outMinute, int &outSecond)
-    {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseTime(s, outHour, outMinute, outSecond) : false;
-    }
-
-    bool Proc::TryParseDate(int &outDay, int &outMonth, int &outYear)
-    {
-      char *s = GetNextToken();
-      return (s != nullptr) ? tryParseDate(s, outDay, outMonth, outYear) : false;
-    }
-
-
-
+  }
 
   bool tryParseFloat(char *s, float &outResult)
   {
